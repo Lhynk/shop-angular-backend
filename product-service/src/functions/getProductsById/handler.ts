@@ -4,14 +4,15 @@ import {
   formatJSONNotFound,
   formatJSONResponse,
 } from '@libs/api-gateway';
+import { getProduct } from '@libs/db-helper';
 
-import { getProductById } from '../../libs/mock-data';
+import { middyfy } from '../../libs/lambda';
 
 const getProductsById: ValidatedEventAPIGatewayProxyEvent<unknown> = async event => {
   try {
     const { productId } = event.pathParameters;
 
-    const product = await getProductById(productId);
+    const product = await getProduct(productId);
 
     if (!product) {
       return formatJSONNotFound({
@@ -25,4 +26,4 @@ const getProductsById: ValidatedEventAPIGatewayProxyEvent<unknown> = async event
   }
 };
 
-export const main = getProductsById;
+export const main = middyfy(getProductsById);
